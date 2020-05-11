@@ -12,8 +12,10 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 
 /**
  *
@@ -64,5 +66,12 @@ public class UserResource {
         user.setLastName(lname);
         User saved = store.create(user);
         return saved;
+    }
+    
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User find(@PathParam("id") Long id) {
+        return store.find(id);
     }
 }

@@ -18,6 +18,7 @@ import javax.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class UserStore {
+
     private final Map<Long, User> users = new HashMap();
 
     @PostConstruct
@@ -44,5 +45,10 @@ public class UserStore {
     public void delete(Long id) {
         System.out.println("delete user " + id);
         users.remove(id);
+    }
+
+    public User find(Long id) {
+        System.out.println("find user " + id);
+        return users.get(id);
     }
 }
