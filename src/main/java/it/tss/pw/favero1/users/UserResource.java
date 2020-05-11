@@ -8,6 +8,7 @@ package it.tss.pw.favero1.users;
 import java.util.Collection;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,6 +18,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -35,20 +37,37 @@ public class UserResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<User> all(@QueryParam("search") String search) {
-        return search == null || search.isEmpty() ? store.all() : store.search(search);
+    public Response all(@QueryParam("search") String search) {
+        Collection<User> lista
+                = search == null || search.isEmpty() ? store.all() : store.search(search);
+        if (lista != null && !lista.isEmpty()) {
+            return Response.status(Response.Status.FOUND)
+                    .entity(lista)
+                    .build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User create(User u) {
+    public Response create(User u) {
+        if (u.getId() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .header("caused by", "id is null")
+                    .build();
+        }
         User user = store.create(u);
-        return user;
+        return Response.status(Response.Status.CREATED)
+                .entity(user)
+                .build();
     }
 
     /**
      *
+     * @param id Long
      * @param fname String
      * @param lname String
      * @param usr String
@@ -58,24 +77,35 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public User create(
+    public Response create(
+            @FormParam("id") Long id,
             @FormParam("firstName") String fname,
             @FormParam("lastName") String lname,
             @FormParam("usr") String usr,
             @FormParam("pwd") String pwd) {
-        User user = new User(null, usr, pwd);
+        User user = new User(id, usr, pwd);
         user.setFirstName(fname);
         user.setLastName(lname);
-        User saved = store.create(user);
-        return saved;
+        store.create(user);
+        return Response.status(Response.Status.CREATED)
+                .entity(user)
+                .build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User find(@PathParam("id") Long id) {
-        return store.find(id);
-}
+    public Response find(@PathParam("id") Long id) {
+        User u = store.find(id);
+        if (u != null) {
+            return Response.status(Response.Status.FOUND)
+                    .entity(u)
+                    .build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .build();
+        }
+    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -83,11 +113,11 @@ public class UserResource {
     public User update(User u) {
         return store.update(u);
     }
-    
-    @GET
+
+    @DELETE
     @Path("{id}")
-    public void delete(@PathParam("id") Long id) {
+    public Response delete(@PathParam("id") Long id) {
         store.delete(id);
-        return;
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

@@ -5,9 +5,11 @@
  */
 package it.tss.pw.favero1.users;
 
+import it.tss.pw.favero.security.Credential;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -59,5 +61,11 @@ public class UserStore {
     public User find(Long id) {
         System.out.println("find user " + id);
         return users.get(id);
+    }
+
+    public Optional<User> search(Credential cred) {
+       return users.values().stream().filter(v -> v.getUsr().contains(cred.getUsr()) 
+                                    && v.getPwd().contains(cred.getPwd()))
+                                .findFirst();
     }
 }
