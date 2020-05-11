@@ -8,6 +8,7 @@ package it.tss.pw.favero1.users;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -46,6 +47,13 @@ public class UserStore {
     public void delete(Long id) {
         System.out.println("delete user " + id);
         users.remove(id);
+    }
+
+    Collection<User> search(String search) {
+        return users.values()
+                .stream()
+                .filter(v -> v.getPwd().contains(search))
+                .collect(Collectors.toList());
     }
 
     public User find(Long id) {
