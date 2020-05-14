@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.tss.pw.favero.security;
+package it.tss.pw.favero1.security;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,6 +15,9 @@ import java.util.Objects;
 public class Credential implements Serializable {
     private String usr;
     private String pwd;
+
+    public Credential() {
+    }
 
     public Credential(String usr, String pwd) {
         this.usr = usr;

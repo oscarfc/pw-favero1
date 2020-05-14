@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.tss.pw.favero.security;
+package it.tss.pw.favero1.security;
 
 import it.tss.pw.favero1.users.UserStore;
 import javax.inject.Inject;

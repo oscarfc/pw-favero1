@@ -5,7 +5,7 @@
  */
 package it.tss.pw.favero1.users;
 
-import it.tss.pw.favero.security.Credential;
+import it.tss.pw.favero1.security.Credential;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
